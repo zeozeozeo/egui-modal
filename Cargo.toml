@@ -11,7 +11,7 @@ authors = ["n00kii"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-egui = {version = "0.26.1", default-features = false}
+egui = { git = "https://github.com/zeozeozeo/egui.git", branch = "tesselate-return-option" }
 
 [dev-dependencies]
 eframe  = "0.26.1"
