@@ -153,6 +153,9 @@ impl ModalState {
     fn save(self, ctx: &Context, id: Id) {
         ctx.data_mut(|d| d.insert_temp(id, self))
     }
+    fn remove(ctx: &Context, id: Id) {
+        ctx.data_mut(|d| d.remove_temp::<Self>(id));
+    }
 }
 
 impl Default for ModalState {
@@ -274,6 +277,15 @@ impl Modal {
     pub fn is_open(&self) -> bool {
         let modal_state = ModalState::load(&self.ctx, self.id);
         modal_state.is_open
+    }
+
+    /// Remove the state of the modal from egui's memory, making it appear
+    /// the same as it did on the first frame.
+    ///
+    /// ⚠️ WARNING ⚠️: This function requires a write lock to the [`egui::Context`]. Using it within
+    /// closures within functions like [`egui::Ui::input_mut`] will result in a deadlock. [Tracking issue](https://github.com/n00kii/egui-modal/issues/15)
+    pub fn forget_state(&self) {
+        ModalState::remove(&self.ctx, self.id)
     }
 
     /// Open the modal; make it visible. The modal prevents user input to other parts of the
